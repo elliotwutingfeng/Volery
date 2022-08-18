@@ -20,8 +20,7 @@ jobs:
             - name: install python packages
               run: |
                   python -m pip install --upgrade pip
-                  # `--no-dependencies` used because supabase dependency info not up-to-date
-                  pip install -r requirements.txt --no-dependencies
+                  pip install -r requirements.txt
 
             - name: fetch arch official repositories and AUR metadata and upload to database
               env:
