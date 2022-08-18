@@ -6,7 +6,7 @@ on:
         - cron: "*/60 * * * *" # runs every hour
 
 jobs:
-    generate_list:
+    scrape_metadata:
         runs-on: ubuntu-latest
         steps:
             - name: setup python
