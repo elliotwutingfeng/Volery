@@ -30,3 +30,6 @@ create table if not exists public.arch_official (
   makedepends text [],
   checkdepends text []
 );
+alter table public.arch_official enable row level security;
+create policy "Enable read access for all users" on public.arch_official for
+select using (true);

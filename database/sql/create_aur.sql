@@ -31,3 +31,6 @@ create table if not exists public.aur (
   "Replaces" text [],
   "Groups" text []
 );
+alter table public.aur enable row level security;
+create policy "Enable read access for all users" on public.aur for
+select using (true);
