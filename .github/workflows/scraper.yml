@@ -23,6 +23,7 @@ jobs:
                   pip install -r requirements.txt
 
             - name: fetch arch official repositories and AUR metadata and upload to database
+              environment: Volery
               env:
                   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
                   SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
