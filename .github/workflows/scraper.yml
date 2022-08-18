@@ -8,6 +8,7 @@ on:
 jobs:
     scrape_metadata:
         runs-on: ubuntu-latest
+        environment: Volery
         steps:
             - name: checkout repo content
               uses: actions/checkout@v3
@@ -23,7 +24,6 @@ jobs:
                   pip install -r requirements.txt
 
             - name: fetch arch official repositories and AUR metadata and upload to database
-              environment: Volery
               env:
                   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
                   SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
