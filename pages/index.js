@@ -361,6 +361,7 @@ export default function Home() {
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
               <Button
+                disabled={!chipData.length}
                 sx={{ width: "90%" }}
                 variant="contained"
                 startIcon={<ContentCopy />}
