@@ -27,6 +27,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
+import { SnackbarProvider, useSnackbar } from "notistack";
 import * as React from "react";
 import { useState, useEffect } from "react";
 
@@ -64,6 +65,9 @@ export default function Home() {
   const [packages, setPackages] = useState([]);
   const [chipData, setChipData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const providerRef = React.useRef();
+
   useEffect(() => {
     const fetchRepoMetaData = async () => {
       setIsLoading(true);
@@ -143,7 +147,15 @@ export default function Home() {
   };
 
   return (
-    <>
+    <SnackbarProvider
+      maxSnack={1}
+      ref={providerRef}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "center",
+      }}
+      autoHideDuration={1000}
+    >
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{ alignItems: "center" }}>
           <Toolbar>
@@ -367,6 +379,9 @@ export default function Home() {
                   navigator.clipboard.writeText(
                     document.getElementById("install-script").value
                   );
+                  providerRef.current.enqueueSnackbar("Copied to clipboard!", {
+                    variant: "success",
+                  });
                 }}
               >
                 Copy to clipboard
@@ -375,6 +390,6 @@ export default function Home() {
           </Grid>
         </Box>
       </Container>
-    </>
+    </SnackbarProvider>
   );
 }
