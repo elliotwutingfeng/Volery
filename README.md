@@ -1,8 +1,8 @@
 <div align="center">
   <h3 align="center">Volery</h3>
   <p align="center">
-    Volery is a package batch installation script generator for Arch
-    Linux or Arch-Like distro users. Package lists from the
+    Volery is a time-saving package batch installation script generator for Arch
+    Linux or Arch-Based distro users. Package lists from the
     <a href="https://archlinux.org/packages/">Arch Linux Official Repository</a> and the
     <a href="https://aur.archlinux.org">Arch User Repository (AUR)</a> are updated once per hour.
     <br />
@@ -35,7 +35,14 @@
 
 1. 🔍 Search for your favourite packages.
 2. 📋 Copy the batch installation script to your clipboard.
-3. 💻 Paste it into your terminal and install your packages!
+3. 💻 Voilà! Now paste it into your terminal and install your packages!
+
+## How Volery works
+
+- Using GitHub Actions + Python & Supabase API, package lists from the [Arch Linux Official Repository](https://archlinux.org/packages/) and the [Arch User Repository (AUR)](https://aur.archlinux.org) are mirrored to a PostgreSQL database hosted on Supabase, once per hour.
+- For Arch Official Repositories metadata, the [official repositories web interface](https://wiki.archlinux.org/title/Official_repositories_web_interface) is used.
+- For the Arch User Repository (AUR) metadata, the [AUR metadata archives](https://wiki.archlinux.org/title/Aurweb_RPC_interface#Limitations) is used to [minimise](https://lists.archlinux.org/pipermail/aur-general/2021-November/036659.html) Volery's impact on AUR traffic.
+- A NextJS web user interface lets users query the database for Arch Official Repositories packages and AUR packages, pick and choose their favourite packages, and generate a [yay](https://github.com/Jguer/yay) script for convenient batch-installation.
 
 ## Setup instructions
 
@@ -65,6 +72,10 @@ yarn install
 ```bash
 yarn run dev
 ```
+
+## Inspiration
+
+Volery was inspired by [Ninite](https://ninite.com), a package management system for Windows. "Volery" was the [codename](https://www.instantfundas.com/2009/10/volery-single-installer-for-popular.html) of Ninite during its private beta stage, and Ninite used to [support](https://ninite.com/linux) Linux in the past.
 
 ## Disclaimer
 

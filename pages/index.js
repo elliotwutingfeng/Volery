@@ -70,11 +70,11 @@ export default function Home() {
       const archOfficial = await supabase
         .from("arch_official")
         .select("pkgname,repo,arch,pkgdesc")
-        .like("pkgname", `%${inputText}%`)
+        .textSearch("pkgname", inputText)
         .order("pkgname", { ascending: true })
         .order("repo", { ascending: true })
         .order("arch", { ascending: true })
-        .limit(15)
+        .limit(30)
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
@@ -92,10 +92,10 @@ export default function Home() {
       const aur = await supabase
         .from("aur")
         .select("ID,Name,Description")
-        .like("Name", `%${inputText}%`)
+        .textSearch("Name", inputText)
         .order("Name", { ascending: true })
         .order("ID", { ascending: true })
-        .limit(15)
+        .limit(30)
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
@@ -169,8 +169,9 @@ export default function Home() {
           <Grid container spacing={2}>
             <Grid xs={12} justifyContent="center" display="flex">
               <Typography component="div" sx={{ flexGrow: 1 }} align="center">
-                Volery is a package batch installation script generator for Arch
-                Linux or Arch-Like distro users. Package lists from the{" "}
+                Volery is a time-saving package batch installation script
+                generator for Arch Linux or Arch-Based distro users. Package
+                lists from the{" "}
                 <Link href="https://archlinux.org/packages/" underline="hover">
                   Arch Linux Official Repository
                 </Link>{" "}
@@ -191,8 +192,8 @@ export default function Home() {
                   your clipboard.
                 </li>
                 <li>
-                  <Emoji symbol="💻" /> Paste it into your terminal and install
-                  your packages!
+                  <Emoji symbol="💻" /> Voilà! Now paste it into your terminal
+                  and install your packages!
                 </li>
               </ol>
             </Grid>
@@ -215,16 +216,19 @@ export default function Home() {
                   option.value === value.value
                 }
                 renderOption={(props, option, { inputValue }) => {
-                  const matches = match(option.pkgname, inputValue, {
+                  const matches = match(option?.pkgname, inputValue, {
                     insideWords: true,
                   });
-                  const parts = parse(option.pkgname, matches);
+                  const parts = parse(option?.pkgname, matches);
 
                   return (
                     <li
                       {...props}
                       key={
-                        option.pkgname + option.repo + option.arch + option.ID
+                        option?.pkgname +
+                        option?.repo +
+                        option?.arch +
+                        option?.ID
                       }
                     >
                       <Stack
@@ -246,16 +250,18 @@ export default function Home() {
                           ))}
                         </span>
                         <Stack direction="row" spacing={1}>
-                          <Chip
-                            color="info"
-                            variant="outlined"
-                            label={
-                              option.description.length > 140
-                                ? option.description.slice(0, 140 - 1) + "..."
-                                : option.description
-                            }
-                            icon={<Description />}
-                          />
+                          {option?.description && (
+                            <Chip
+                              color="info"
+                              variant="outlined"
+                              label={
+                                option.description.length > 140
+                                  ? option.description.slice(0, 140 - 1) + "..."
+                                  : option.description
+                              }
+                              icon={<Description />}
+                            />
+                          )}
                           {option.isAUR ? (
                             <Chip
                               color="secondary"
