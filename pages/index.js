@@ -1,27 +1,319 @@
+import {
+  Computer,
+  ContentCopy,
+  FolderOpenRounded,
+  FolderSpecial,
+  Search,
+} from "@mui/icons-material";
+import {
+  AppBar,
+  Autocomplete,
+  Box,
+  Button,
+  Chip,
+  Container,
+  InputAdornment,
+  Stack,
+  TextareaAutosize,
+  TextField,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import Grid from "@mui/material/Unstable_Grid2";
+import match from "autosuggest-highlight/match";
+import parse from "autosuggest-highlight/parse";
+import * as React from "react";
 import { useState, useEffect } from "react";
 
-import Account from "../components/Account";
-import Auth from "../components/Auth";
 import { supabase } from "../utils/supabaseClient";
 
+const Emoji = (props) => (
+  <span
+    className="emoji"
+    role="img"
+    aria-label={props.label ? props.label : ""}
+    aria-hidden={props.label ? "false" : "true"}
+  >
+    {props.symbol}
+  </span>
+);
+
+const ListItem = styled("li")(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
 export default function Home() {
-  const [session, setSession] = useState(null);
-
+  const [inputText, setInputText] = useState("");
+  const [packages, setPackages] = useState([]);
+  const [chipData, setChipData] = useState([]);
   useEffect(() => {
-    setSession(supabase.auth.session());
+    const fetchRepoMetaData = async () => {
+      const archOfficial = await supabase
+        .from("arch_official")
+        .select("pkgname,repo,arch")
+        .like("pkgname", `%${inputText}%`)
+        .order("pkgname", { ascending: true })
+        .order("repo", { ascending: true })
+        .order("arch", { ascending: true })
+        .limit(15)
+        .then(({ data, error }) => {
+          if (!error) {
+            return data.map((e) => {
+              return { ...e, isAUR: false };
+            });
+          }
+          return [];
+        });
+      const aur = await supabase
+        .from("aur")
+        .select("ID,Name")
+        .like("Name", `%${inputText}%`)
+        .order("Name", { ascending: true })
+        .order("ID", { ascending: true })
+        .limit(15)
+        .then(({ data, error }) => {
+          if (!error) {
+            return data.map((e) => {
+              return { pkgname: e["Name"], ID: e["ID"], isAUR: true };
+            });
+          }
+          return [];
+        });
+      const chipPkgNames = chipData.map((e) => e.pkgname);
+      const data = archOfficial
+        .concat(aur)
+        .filter((d) => !chipPkgNames.find((e) => d.pkgname === e));
+      setPackages(data);
+    };
+    if (inputText.trim().length) {
+      fetchRepoMetaData().catch(console.error);
+    }
+  }, [inputText, chipData]);
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+  const handleAdd = (newValue) => {
+    setChipData((chips) => {
+      if (
+        newValue !== null &&
+        !chips.find((e) => e.pkgname === newValue.pkgname)
+      ) {
+        const newChips = chips.concat([newValue]);
+        newChips.sort(function (a, b) {
+          return a.pkgname.localeCompare(b.pkgname);
+        });
+        return newChips;
+      }
+      return chips;
     });
-  }, []);
+  };
+
+  const handleDelete = (chipToDelete) => () => {
+    setChipData((chips) =>
+      chips.filter((chip) => chip.pkgname !== chipToDelete.pkgname)
+    );
+  };
 
   return (
-    <div className="container" style={{ padding: "50px 0 100px 0" }}>
-      {!session ? (
-        <Auth />
-      ) : (
-        <Account key={session.user.id} session={session} />
-      )}
-    </div>
+    <>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" sx={{ alignItems: "center" }}>
+          <Toolbar>
+            <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
+              <Emoji symbol="🪶" /> Volery
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </Box>
+      <Container className="container" sx={{ p: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <Typography component="div" sx={{ flexGrow: 1 }} align="center">
+                Volery is a package batch installation script generator for Arch
+                Linux or Arch-Like distro users. Package lists from the{" "}
+                <b>Arch Linux Official Repository</b> and the{" "}
+                <b>Arch User Repository (AUR)</b> are updated once per hour.
+              </Typography>
+            </Grid>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <ol>
+                <li>
+                  <Emoji symbol="🔍" /> Search for your favourite packages.
+                </li>
+                <li>
+                  <Emoji symbol="📋" /> Copy the batch installation script to
+                  your clipboard.
+                </li>
+                <li>
+                  <Emoji symbol="💻" /> Paste it into your terminal and install
+                  your packages!
+                </li>
+              </ol>
+            </Grid>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <Autocomplete
+                disablePortal
+                id="package-combo-box"
+                options={packages}
+                sx={{ width: "80%" }}
+                getOptionLabel={(e) => e.pkgname}
+                onChange={(_, newValue) => {
+                  if (newValue !== null) {
+                    handleAdd(newValue);
+                  }
+                }}
+                onInputChange={(_, newInputValue) => {
+                  setInputText(newInputValue);
+                }}
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
+                renderOption={(props, option, { inputValue }) => {
+                  const matches = match(option.pkgname, inputValue, {
+                    insideWords: true,
+                  });
+                  const parts = parse(option.pkgname, matches);
+
+                  return (
+                    <li
+                      {...props}
+                      key={
+                        option.pkgname + option.repo + option.arch + option.ID
+                      }
+                    >
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        justifyContent="space-between"
+                        width="100%"
+                      >
+                        <span style={{ alignSelf: "center" }}>
+                          {parts.map((part, index) => (
+                            <font
+                              key={index}
+                              style={{
+                                fontWeight: part.highlight ? 700 : 400,
+                              }}
+                            >
+                              {part.text}
+                            </font>
+                          ))}
+                        </span>
+                        <Stack direction="row" spacing={1}>
+                          {option.isAUR ? (
+                            <Chip
+                              color="secondary"
+                              variant="outlined"
+                              label={"AUR"}
+                              icon={<FolderSpecial />}
+                            />
+                          ) : (
+                            <>
+                              <Chip
+                                color="secondary"
+                                variant="outlined"
+                                label={option.repo}
+                                icon={<FolderOpenRounded />}
+                              />
+                              <Chip
+                                color="primary"
+                                variant="outlined"
+                                label={option.arch}
+                                icon={<Computer />}
+                              />
+                            </>
+                          )}
+                        </Stack>
+                      </Stack>
+                    </li>
+                  );
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label=""
+                    placeholder="Search Package Name (Example: firefox)"
+                    aria-placeholder="Search Package Name"
+                    InputProps={{
+                      ...params.InputProps,
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Search />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                )}
+              />
+            </Grid>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <Grid
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexWrap: "wrap",
+                  listStyle: "none",
+                  p: 0.5,
+                  m: 0,
+                  width: "80%",
+                }}
+                component="ul"
+              >
+                {chipData.map((data) => {
+                  let icon;
+
+                  return (
+                    <ListItem key={data.pkgname}>
+                      <Chip
+                        color="success"
+                        variant="outlined"
+                        icon={icon}
+                        label={data.pkgname}
+                        onDelete={handleDelete(data)}
+                      />
+                    </ListItem>
+                  );
+                })}
+              </Grid>
+            </Grid>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <TextareaAutosize
+                style={{ width: "80%" }}
+                minRows={3}
+                id="install-script"
+                name="install-script"
+                rows="4"
+                cols="50"
+                readOnly
+                value={
+                  chipData.length
+                    ? `yay -S ${chipData
+                        .map((e) => e.pkgname)
+                        .filter(function (item, pos, ary) {
+                          return !pos || item !== ary[pos - 1];
+                        })
+                        .join(" ")}`
+                    : ""
+                }
+              />
+            </Grid>
+            <Grid xs={12} justifyContent="center" display="flex">
+              <Button
+                sx={{ width: "80%" }}
+                variant="contained"
+                startIcon={<ContentCopy />}
+                onClick={() => {
+                  navigator.clipboard.writeText(
+                    document.getElementById("install-script").value
+                  );
+                }}
+              >
+                Copy to clipboard
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+    </>
   );
 }
