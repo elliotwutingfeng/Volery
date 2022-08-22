@@ -14,6 +14,7 @@ import {
   Chip,
   Container,
   InputAdornment,
+  Link,
   Stack,
   TextareaAutosize,
   TextField,
@@ -147,8 +148,14 @@ export default function Home() {
               <Typography component="div" sx={{ flexGrow: 1 }} align="center">
                 Volery is a package batch installation script generator for Arch
                 Linux or Arch-Like distro users. Package lists from the{" "}
-                <b>Arch Linux Official Repository</b> and the{" "}
-                <b>Arch User Repository (AUR)</b> are updated once per hour.
+                <Link href="https://archlinux.org/packages/" underline="hover">
+                  Arch Linux Official Repository
+                </Link>{" "}
+                and the{" "}
+                <Link href="https://aur.archlinux.org/" underline="hover">
+                  Arch User Repository (AUR)
+                </Link>{" "}
+                are updated once per hour.
               </Typography>
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
@@ -319,7 +326,7 @@ export default function Home() {
                           return !pos || item !== ary[pos - 1];
                         })
                         .join(" ")}`
-                    : ""
+                    : "No packages added yet; use the search bar to add packages."
                 }
               />
             </Grid>

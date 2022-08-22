@@ -1,1 +1,70 @@
-# Volery
+<div align="center">
+  <h3 align="center">Volery</h3>
+  <p align="center">
+    Volery is a package batch installation script generator for Arch
+    Linux or Arch-Like distro users. Package lists from the
+    <a href="https://archlinux.org/packages/">Arch Linux Official Repository</a> and the
+    <a href="https://aur.archlinux.org">Arch User Repository (AUR)</a> are updated once per hour.
+    <br />
+    <br />
+    <a href="https://volery-elliotwutingfeng.vercel.app">View Live Demo</a>
+    ·
+    <a href="https://github.com/elliotwutingfeng/Volery/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/elliotwutingfeng/Volery/issues">Request Feature</a>
+  </p>
+  <p align="center">
+    <a href="https://nextjs.org"><img src="https://img.shields.io/badge/NextJS-1C1C1C?style=for-the-badge&logo=nextdotjs&logoColor=ffffff" alt="NextJS"/></a>
+    <a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-1C1C1C?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase"/></a>
+    <a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-1C1C1C?style=for-the-badge&logo=vercel&logoColor=ffffff" alt="Vercel"/></a>
+    <a href="https://archlinux.org"><img src="https://img.shields.io/badge/Arch_Linux-1C1C1C?style=for-the-badge&logo=archlinux&logoColor=1793D1" alt="Arch Linux"/></a>
+  </p>
+  <p align="center">
+    <a href="https://github.com/elliotwutingfeng/Volery/stargazers"><img src="https://img.shields.io/github/stars/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub stars"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/watchers"><img src="https://img.shields.io/github/watchers/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub watchers"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/network/members"><img src="https://img.shields.io/github/forks/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub forks"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/issues"><img src="https://img.shields.io/github/issues/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub issues"/></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE-GREEN?style=for-the-badge" alt="GitHub license"/></a>
+  </p>
+</div>
+
+---
+
+## How to use Volery
+
+1. 🔍 Search for your favourite packages.
+2. 📋 Copy the batch installation script to your clipboard.
+3. 💻 Paste it into your terminal and install your packages!
+
+## Setup instructions
+
+`git clone` and `cd` into the project directory
+
+### Declare environment variables
+
+```bash
+cp .env-dev .env.local
+```
+
+In `.env.local`, fill in the following variables
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+### Install dependencies
+
+```bash
+yarn install
+```
+
+### Run in development mode
+
+```bash
+yarn run dev
+```
+
+## Disclaimer
+
+- This project is not sponsored, endorsed, or otherwise affiliated with Arch Linux.
