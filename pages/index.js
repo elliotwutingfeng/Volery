@@ -74,7 +74,6 @@ export default function Home() {
         .order("pkgname", { ascending: true })
         .order("repo", { ascending: true })
         .order("arch", { ascending: true })
-        .limit(30)
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
@@ -95,7 +94,6 @@ export default function Home() {
         .textSearch("Name", inputText)
         .order("Name", { ascending: true })
         .order("ID", { ascending: true })
-        .limit(30)
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
