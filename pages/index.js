@@ -27,7 +27,7 @@ import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Unstable_Grid2";
 import match from "autosuggest-highlight/match";
 import parse from "autosuggest-highlight/parse";
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { SnackbarProvider } from "notistack";
 import * as React from "react";
 import { useState, useEffect } from "react";
 
