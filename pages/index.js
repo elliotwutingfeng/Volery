@@ -1,6 +1,7 @@
 import {
   Computer,
   ContentCopy,
+  Description,
   FolderOpenRounded,
   FolderSpecial,
   Search,
@@ -51,7 +52,7 @@ export default function Home() {
     const fetchRepoMetaData = async () => {
       const archOfficial = await supabase
         .from("arch_official")
-        .select("pkgname,repo,arch")
+        .select("pkgname,repo,arch,pkgdesc")
         .like("pkgname", `%${inputText}%`)
         .order("pkgname", { ascending: true })
         .order("repo", { ascending: true })
@@ -60,14 +61,20 @@ export default function Home() {
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
-              return { ...e, isAUR: false };
+              return {
+                pkgname: e["pkgname"],
+                repo: e["repo"],
+                arch: e["arch"],
+                description: e["pkgdesc"],
+                isAUR: false,
+              };
             });
           }
           return [];
         });
       const aur = await supabase
         .from("aur")
-        .select("ID,Name")
+        .select("ID,Name,Description")
         .like("Name", `%${inputText}%`)
         .order("Name", { ascending: true })
         .order("ID", { ascending: true })
@@ -75,7 +82,12 @@ export default function Home() {
         .then(({ data, error }) => {
           if (!error) {
             return data.map((e) => {
-              return { pkgname: e["Name"], ID: e["ID"], isAUR: true };
+              return {
+                pkgname: e["Name"],
+                ID: e["ID"],
+                description: e["Description"],
+                isAUR: true,
+              };
             });
           }
           return [];
@@ -87,7 +99,11 @@ export default function Home() {
       setPackages(data);
     };
     if (inputText.trim().length) {
-      fetchRepoMetaData().catch(console.error);
+      // Debounce
+      const timeout = setTimeout(async () => {
+        await fetchRepoMetaData().catch(console.error);
+      }, 500);
+      return () => clearTimeout(timeout);
     }
   }, [inputText, chipData]);
 
@@ -124,7 +140,7 @@ export default function Home() {
           </Toolbar>
         </AppBar>
       </Box>
-      <Container className="container" sx={{ p: 3 }}>
+      <Container className="container" sx={{ p: 3 }} maxWidth="xl">
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
             <Grid xs={12} justifyContent="center" display="flex">
@@ -155,7 +171,7 @@ export default function Home() {
                 disablePortal
                 id="package-combo-box"
                 options={packages}
-                sx={{ width: "80%" }}
+                sx={{ width: "100%" }}
                 getOptionLabel={(e) => e.pkgname}
                 onChange={(_, newValue) => {
                   if (newValue !== null) {
@@ -200,6 +216,16 @@ export default function Home() {
                           ))}
                         </span>
                         <Stack direction="row" spacing={1}>
+                          <Chip
+                            color="info"
+                            variant="outlined"
+                            label={
+                              option.description.length > 140
+                                ? option.description.slice(0, 140 - 1) + "..."
+                                : option.description
+                            }
+                            icon={<Description />}
+                          />
                           {option.isAUR ? (
                             <Chip
                               color="secondary"
@@ -278,7 +304,7 @@ export default function Home() {
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
               <TextareaAutosize
-                style={{ width: "80%" }}
+                style={{ width: "90%" }}
                 minRows={3}
                 id="install-script"
                 name="install-script"
@@ -299,7 +325,7 @@ export default function Home() {
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
               <Button
-                sx={{ width: "80%" }}
+                sx={{ width: "90%" }}
                 variant="contained"
                 startIcon={<ContentCopy />}
                 onClick={() => {
