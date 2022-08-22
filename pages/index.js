@@ -14,6 +14,8 @@ import {
   Chip,
   Container,
   InputAdornment,
+  LinearProgress,
+  linearProgressClasses,
   Link,
   Stack,
   TextareaAutosize,
@@ -29,6 +31,18 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 
 import { supabase } from "../utils/supabaseClient";
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 10,
+  borderRadius: 0,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: "#ffffff",
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 0,
+    backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+  },
+}));
 
 const Emoji = (props) => (
   <span
@@ -49,8 +63,10 @@ export default function Home() {
   const [inputText, setInputText] = useState("");
   const [packages, setPackages] = useState([]);
   const [chipData, setChipData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const fetchRepoMetaData = async () => {
+      setIsLoading(true);
       const archOfficial = await supabase
         .from("arch_official")
         .select("pkgname,repo,arch,pkgdesc")
@@ -98,6 +114,7 @@ export default function Home() {
         .concat(aur)
         .filter((d) => !chipPkgNames.find((e) => d.pkgname === e));
       setPackages(data);
+      setIsLoading(false);
     };
     if (inputText.trim().length) {
       // Debounce
@@ -140,6 +157,12 @@ export default function Home() {
             </Typography>
           </Toolbar>
         </AppBar>
+      </Box>
+      <Box sx={{ width: "100%", flexGrow: 1 }}>
+        <BorderLinearProgress
+          variant={isLoading ? "query" : "determinate"}
+          value={isLoading ? undefined : 0}
+        />
       </Box>
       <Container className="container" sx={{ p: 3 }} maxWidth="xl">
         <Box sx={{ flexGrow: 1 }}>

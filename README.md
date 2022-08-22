@@ -18,6 +18,7 @@
     <a href="https://supabase.com"><img src="https://img.shields.io/badge/Supabase-1C1C1C?style=for-the-badge&logo=supabase&logoColor=3ECF8E" alt="Supabase"/></a>
     <a href="https://vercel.com"><img src="https://img.shields.io/badge/Vercel-1C1C1C?style=for-the-badge&logo=vercel&logoColor=ffffff" alt="Vercel"/></a>
     <a href="https://archlinux.org"><img src="https://img.shields.io/badge/Arch_Linux-1C1C1C?style=for-the-badge&logo=archlinux&logoColor=1793D1" alt="Arch Linux"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/actions"><img src="https://img.shields.io/badge/GitHub_Actions-1C1C1C?style=for-the-badge&logo=github-actions&logoColor=2088FF" alt="GitHub Actions"/></a>
   </p>
   <p align="center">
     <a href="https://github.com/elliotwutingfeng/Volery/stargazers"><img src="https://img.shields.io/github/stars/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub stars"/></a>
