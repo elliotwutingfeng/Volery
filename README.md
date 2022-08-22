@@ -50,6 +50,10 @@
 
 `git clone` and `cd` into the project directory
 
+## Supabase Setup
+
+Create a free [Supabase](https://supabase.com) account and project, and run the SQL scripts [create_arch_official_repo.sql](database/sql/create_arch_official_repo.sql) and [create_aur.sql](database/sql/create_aur.sql) from your Supabase project dashboard.
+
 ### Declare environment variables
 
 ```bash
@@ -59,6 +63,7 @@ cp .env-dev .env.local
 In `.env.local`, fill in the following variables
 
 ```bash
+# You will need a free Supabase account and project (https://supabase.com)
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```

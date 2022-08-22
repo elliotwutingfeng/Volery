@@ -107,10 +107,7 @@ export default function Home() {
           }
           return [];
         });
-      const chipPkgNames = chipData.map((e) => e.pkgname);
-      const data = archOfficial
-        .concat(aur)
-        .filter((d) => !chipPkgNames.find((e) => d.pkgname === e));
+      const data = archOfficial.concat(aur);
       setPackages(data);
       setIsLoading(false);
     };
@@ -121,7 +118,7 @@ export default function Home() {
       }, 500);
       return () => clearTimeout(timeout);
     }
-  }, [inputText, chipData]);
+  }, [inputText]);
 
   const handleAdd = (newValue) => {
     setChipData((chips) => {
@@ -199,7 +196,10 @@ export default function Home() {
               <Autocomplete
                 disablePortal
                 id="package-combo-box"
-                options={packages}
+                options={packages.filter(
+                  (d) =>
+                    !chipData.map((e) => e.pkgname).find((e) => d.pkgname === e)
+                )}
                 sx={{ width: "100%" }}
                 getOptionLabel={(e) => e.pkgname}
                 onChange={(_, newValue) => {
