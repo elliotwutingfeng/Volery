@@ -63,7 +63,7 @@ const ListItem = styled("li")(({ theme }) => ({
 export default function Home() {
   const [inputText, setInputText] = useState("");
   const [packages, setPackages] = useState([]);
-  const [chipData, setChipData] = useState([]);
+  const [chipData, setChipData] = useState(new Set());
   const [isLoading, setIsLoading] = useState(false);
 
   const providerRef = React.useRef();
@@ -126,23 +126,16 @@ export default function Home() {
 
   const handleAdd = (newValue) => {
     setChipData((chips) => {
-      if (
-        newValue !== null &&
-        !chips.find((e) => e.pkgname === newValue.pkgname)
-      ) {
-        const newChips = chips.concat([newValue]);
-        newChips.sort(function (a, b) {
-          return a.pkgname.localeCompare(b.pkgname);
-        });
-        return newChips;
+      if (newValue !== null && !chips.has(newValue.pkgname)) {
+        return new Set(chips.add(newValue.pkgname));
       }
       return chips;
     });
   };
 
   const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) =>
-      chips.filter((chip) => chip.pkgname !== chipToDelete.pkgname)
+    setChipData(
+      (chips) => new Set([...chips].filter((x) => x !== chipToDelete))
     );
   };
 
@@ -208,10 +201,7 @@ export default function Home() {
               <Autocomplete
                 disablePortal
                 id="package-combo-box"
-                options={packages.filter(
-                  (d) =>
-                    !chipData.map((e) => e.pkgname).find((e) => d.pkgname === e)
-                )}
+                options={packages.filter((d) => !chipData.has(d.pkgname))}
                 sx={{ width: "100%" }}
                 getOptionLabel={(e) => e.pkgname}
                 onChange={(_, newValue) => {
@@ -333,21 +323,22 @@ export default function Home() {
                 }}
                 component="ul"
               >
-                {chipData.map((data) => {
-                  let icon;
-
-                  return (
-                    <ListItem key={data.pkgname}>
-                      <Chip
-                        color="success"
-                        variant="outlined"
-                        icon={icon}
-                        label={data.pkgname}
-                        onDelete={handleDelete(data)}
-                      />
-                    </ListItem>
-                  );
-                })}
+                {[...chipData]
+                  .sort(function (a, b) {
+                    return a.localeCompare(b);
+                  })
+                  .map((pkgname) => {
+                    return (
+                      <ListItem key={pkgname}>
+                        <Chip
+                          color="success"
+                          variant="outlined"
+                          label={pkgname}
+                          onDelete={handleDelete(pkgname)}
+                        />
+                      </ListItem>
+                    );
+                  })}
               </Grid>
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
@@ -360,11 +351,10 @@ export default function Home() {
                 cols="50"
                 readOnly
                 value={
-                  chipData.length
-                    ? `yay -S ${chipData
-                        .map((e) => e.pkgname)
-                        .filter(function (item, pos, ary) {
-                          return !pos || item !== ary[pos - 1];
+                  chipData.size
+                    ? `yay -S ${[...chipData]
+                        .sort(function (a, b) {
+                          return a.localeCompare(b);
                         })
                         .join(" ")}`
                     : "No packages added yet; use the search bar to add packages."
@@ -373,7 +363,7 @@ export default function Home() {
             </Grid>
             <Grid xs={12} justifyContent="center" display="flex">
               <Button
-                disabled={!chipData.length}
+                disabled={!chipData.size}
                 sx={{ width: "90%" }}
                 variant="contained"
                 startIcon={<ContentCopy />}
