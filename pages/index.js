@@ -219,8 +219,10 @@ export default function Home() {
                     handleAdd(newValue);
                   }
                 }}
-                onInputChange={(_, newInputValue) => {
-                  setInputText(newInputValue);
+                onInputChange={(_, newInputValue, reason) => {
+                  if (reason !== "reset") {
+                    setInputText(newInputValue);
+                  }
                 }}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
