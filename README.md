@@ -1,5 +1,6 @@
 <div align="center">
   <h3 align="center">Volery</h3>
+  <img src="public/1fab6.svg" alt="Logo" width="200" height="200">
   <p align="center">
     Volery is a time-saving package batch installation script generator for Arch
     Linux or Arch-Based distro users. Package lists from the
@@ -26,6 +27,7 @@
     <a href="https://github.com/elliotwutingfeng/Volery/network/members"><img src="https://img.shields.io/github/forks/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub forks"/></a>
     <a href="https://github.com/elliotwutingfeng/Volery/issues"><img src="https://img.shields.io/github/issues/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub issues"/></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE-GREEN?style=for-the-badge" alt="GitHub license"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/actions/workflows/scraper.yml"><img src="https://img.shields.io/github/workflow/status/elliotwutingfeng/Volery/scraper?label=REPO%20SYNC&style=for-the-badge"/></a>
   </p>
 </div>
 
