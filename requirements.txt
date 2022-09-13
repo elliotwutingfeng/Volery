@@ -1,7 +1,7 @@
-aiohttp==3.8.1
-black==22.6.0
+aiohttp
+black
 httpcore
 httpx
-more-itertools==8.14.0
+more-itertools
 postgrest-py==0.10.2
 supabase==0.5.8
