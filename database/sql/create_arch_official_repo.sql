@@ -8,7 +8,7 @@ create table if not exists public.arch_official (
   repo text,
   arch text,
   pkgver text,
-  pkgrel bigint,
+  pkgrel text,
   epoch bigint,
   pkgdesc text,
   url text,
