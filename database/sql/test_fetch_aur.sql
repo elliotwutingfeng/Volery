@@ -20,6 +20,7 @@ create table if not exists test_aur (
   "OutOfDate" bigint,
   -- timestamp in unix seconds
   "Maintainer" text,
+  "Submitter" text,
   "FirstSubmitted" bigint,
   -- timestamp in unix seconds
   "LastModified" bigint,
@@ -51,6 +52,7 @@ insert into test_aur (
     "Popularity",
     "OutOfDate",
     "Maintainer",
+    "Submitter",
     "FirstSubmitted",
     "LastModified",
     "URLPath",
@@ -84,6 +86,7 @@ from jsonb_to_recordset(
     "OutOfDate" bigint,
     -- timestamp in unix seconds
     "Maintainer" text,
+    "Submitter" text,
     "FirstSubmitted" bigint,
     -- timestamp in unix seconds
     "LastModified" bigint,
@@ -109,6 +112,7 @@ set PackageBase = excluded.PackageBase,
   Popularity = excluded.Popularity,
   OutOfDate = excluded.OutOfDate,
   Maintainer = excluded.Maintainer,
+  Submitter = excluded.Submitter,
   FirstSubmitted = excluded.FirstSubmitted,
   LastModified = excluded.LastModified,
   URLPath = excluded.URLPath,

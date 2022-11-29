@@ -14,7 +14,9 @@ create table if not exists public.aur (
   "Popularity" float,
   "OutOfDate" bigint,
   -- timestamp in unix seconds
+  "CoMaintainers" text [],
   "Maintainer" text,
+  "Submitter" text,
   "FirstSubmitted" bigint,
   -- timestamp in unix seconds
   "LastModified" bigint,
