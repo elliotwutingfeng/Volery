@@ -4,4 +4,4 @@ httpcore
 httpx
 more-itertools
 postgrest-py==0.10.3
-supabase==0.7.1
+supabase==0.5.8
