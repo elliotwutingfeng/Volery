@@ -30,7 +30,7 @@ create table if not exists
     optdepends text[],
     makedepends text[],
     checkdepends text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   );
 
 alter table public.arch_official enable row level security;

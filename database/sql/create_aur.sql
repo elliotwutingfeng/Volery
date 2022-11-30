@@ -33,7 +33,7 @@ create table if not exists
     "CheckDepends" text[],
     "Replaces" text[],
     "Groups" text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   );
 
 alter table public.aur enable row level security;
