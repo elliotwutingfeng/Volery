@@ -5,11 +5,10 @@ import os
 from collections import defaultdict
 from datetime import datetime
 
+from http_requests import backoff_delay_async, get_async
 from more_itertools import chunked
 from postgrest import APIError
 from supabase import Client, create_client
-
-from http_requests import backoff_delay_async, get_async
 
 
 def fetch_arch_official_repositories(
@@ -59,7 +58,7 @@ def fetch_arch_official_repositories(
                 results_pages.append(body["results"])
             else:
                 logger.warning("Page at %s has no 'results' field", endpoint)
-
+    logger.info("arch_official data downloaded")
     for page_number, results_page in enumerate(results_pages, start=1):
         for row in results_page:
             row["volery_last_synced"] = str(current_timestamp)
@@ -67,6 +66,9 @@ def fetch_arch_official_repositories(
         for number_of_retries_made in range(max_retries):
             try:
                 sbp.table("arch_official").upsert(results_page).execute()
+                logger.info(
+                    "arch_official | Page %d out of %d updated", page_number, len(results_pages)
+                )
                 break
             except APIError as error:
                 logger.warning(
@@ -104,6 +106,7 @@ def fetch_aur(
         logger.error("%s is empty", endpoint)
         return False
     all_results = json.loads(response)
+    logger.info("aur data downloaded")
 
     # Workaround for https://github.com/supabase/postgrest-js/issues/173
     # Each row in all_results has a combination of keys

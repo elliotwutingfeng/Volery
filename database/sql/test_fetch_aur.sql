@@ -1,43 +1,50 @@
 -- drop table
 --   if exists test_aur;
-set statement_timeout to 900000;
+set
+  statement_timeout to 900000;
+
 -- 900 seconds timeout
-set http.timeout_msec to 900000;
-create table if not exists test_aur (
-  volery_last_synced timestamptz DEFAULT current_timestamp,
-  -- repository fields
-  primary key ("ID", "Name"),
-  -- do not use CONSTRAINT ID_Name unique("ID", "Name"),
-  "ID" bigint,
-  "Name" text,
-  "PackageBaseID" bigint,
-  "PackageBase" text,
-  "Version" text,
-  "Description" text,
-  "URL" text,
-  "NumVotes" bigint,
-  "Popularity" float,
-  "OutOfDate" bigint,
-  -- timestamp in unix seconds
-  "CoMaintainers" text [],
-  "Maintainer" text,
-  "Submitter" text,
-  "FirstSubmitted" bigint,
-  -- timestamp in unix seconds
-  "LastModified" bigint,
-  -- timestamp in unix seconds
-  "URLPath" text,
-  "Depends" text [],
-  "MakeDepends" text [],
-  "License" text [],
-  "Keywords" text [],
-  "Conflicts" text [],
-  "Provides" text [],
-  "OptDepends" text [],
-  "CheckDepends" text [],
-  "Replaces" text [],
-  "Groups" text []
-);
+set
+  http.timeout_msec to 900000;
+
+create table if not exists
+  test_aur (
+    volery_last_synced timestamptz DEFAULT current_timestamp,
+    -- repository fields
+    primary key ("Name"),
+    -- do not use CONSTRAINT ID_Name unique("Name"),
+    "ID" bigint,
+    "Name" text,
+    "PackageBaseID" bigint,
+    "PackageBase" text,
+    "Version" text,
+    "Description" text,
+    "URL" text,
+    "NumVotes" bigint,
+    "Popularity" float,
+    "OutOfDate" bigint,
+    -- timestamp in unix seconds
+    "CoMaintainers" text[],
+    "Maintainer" text,
+    "Submitter" text,
+    "FirstSubmitted" bigint,
+    -- timestamp in unix seconds
+    "LastModified" bigint,
+    -- timestamp in unix seconds
+    "URLPath" text,
+    "Depends" text[],
+    "MakeDepends" text[],
+    "License" text[],
+    "Keywords" text[],
+    "Conflicts" text[],
+    "Provides" text[],
+    "OptDepends" text[],
+    "CheckDepends" text[],
+    "Replaces" text[],
+    "Groups" text[],
+    volery_id bigserial
+  );
+
 DO $$
 declare api_endpoint text := 'https://aur.archlinux.org/packages-meta-ext-v1.json.gz';
 BEGIN
@@ -67,7 +74,8 @@ insert into test_aur (
     "OptDepends",
     "CheckDepends",
     "Replaces",
-    "Groups"
+    "Groups",
+    volery_id bigserial
   )
 select *
 from jsonb_to_recordset(
@@ -87,7 +95,7 @@ from jsonb_to_recordset(
     "Popularity" float,
     "OutOfDate" bigint,
     -- timestamp in unix seconds
-    "CoMaintainers" text [],
+    "CoMaintainers" text[],
     "Maintainer" text,
     "Submitter" text,
     "FirstSubmitted" bigint,
@@ -95,16 +103,17 @@ from jsonb_to_recordset(
     "LastModified" bigint,
     -- timestamp in unix seconds
     "URLPath" text,
-    "Depends" text [],
-    "MakeDepends" text [],
-    "License" text [],
-    "Keywords" text [],
-    "Conflicts" text [],
-    "Provides" text [],
-    "OptDepends" text [],
-    "CheckDepends" text [],
-    "Replaces" text [],
-    "Groups" text []
+    "Depends" text[],
+    "MakeDepends" text[],
+    "License" text[],
+    "Keywords" text[],
+    "Conflicts" text[],
+    "Provides" text[],
+    "OptDepends" text[],
+    "CheckDepends" text[],
+    "Replaces" text[],
+    "Groups" text[],
+    volery_id bigserial
   ) on conflict on constraint test_ID_Name_PackageBaseID do
 update
 set PackageBase = excluded.PackageBase,
@@ -130,5 +139,6 @@ set PackageBase = excluded.PackageBase,
   CheckDepends = excluded.CheckDepends,
   Replaces = excluded.Replaces,
   Groups = excluded.Groups,
+  volery_id = excluded.volery_id,
   volery_last_synced = now();
 END $$;
