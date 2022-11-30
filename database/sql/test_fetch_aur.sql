@@ -42,7 +42,7 @@ create table if not exists
     "CheckDepends" text[],
     "Replaces" text[],
     "Groups" text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   );
 
 DO $$
@@ -75,7 +75,7 @@ insert into test_aur (
     "CheckDepends",
     "Replaces",
     "Groups",
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   )
 select *
 from jsonb_to_recordset(
@@ -113,7 +113,7 @@ from jsonb_to_recordset(
     "CheckDepends" text[],
     "Replaces" text[],
     "Groups" text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   ) on conflict on constraint test_ID_Name_PackageBaseID do
 update
 set PackageBase = excluded.PackageBase,

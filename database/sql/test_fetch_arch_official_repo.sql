@@ -39,7 +39,7 @@ create table if not exists
     optdepends text[],
     makedepends text[],
     checkdepends text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   );
 
 DO $$
@@ -111,7 +111,7 @@ from jsonb_to_recordset(
     optdepends text[],
     makedepends text[],
     checkdepends text[],
-    volery_id bigserial
+    volery_id bigserial UNIQUE
   ) on conflict on constraint test_pkgname_repo_arch do
 update
 set pkgbase = excluded.pkgbase,
