@@ -1,3 +1,4 @@
+"use client";
 import { ContentCopy } from "@mui/icons-material";
 import {
   AppBar,
