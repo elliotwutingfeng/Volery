@@ -27,7 +27,7 @@
     <a href="https://github.com/elliotwutingfeng/Volery/network/members"><img src="https://img.shields.io/github/forks/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub forks"/></a>
     <a href="https://github.com/elliotwutingfeng/Volery/issues"><img src="https://img.shields.io/github/issues/elliotwutingfeng/Volery?style=for-the-badge" alt="GitHub issues"/></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-APACHE-GREEN?style=for-the-badge" alt="GitHub license"/></a>
-    <a href="https://github.com/elliotwutingfeng/Volery/actions/workflows/scraper.yml"><img src="https://img.shields.io/github/workflow/status/elliotwutingfeng/Volery/scraper?label=REPO%20SYNC&style=for-the-badge"/></a>
+    <a href="https://github.com/elliotwutingfeng/Volery/actions/workflows/scraper.yml"><img src="https://img.shields.io/github/actions/workflow/status/elliotwutingfeng/Volery/scraper.yml?branch=main&label=REPO%20SYNC&style=for-the-badge"/></a>
   </p>
 </div>
 
