@@ -3,7 +3,7 @@ import json
 import logging
 import os
 from collections import defaultdict
-from datetime import datetime
+import datetime
 
 from http_requests import backoff_delay_async, get_async
 from more_itertools import chunked
@@ -12,14 +12,14 @@ from supabase import Client, create_client
 
 
 def fetch_arch_official_repositories(
-    sbp: Client, current_timestamp: datetime, max_retries: int, logger: logging.Logger
+    sbp: Client, current_timestamp: datetime.datetime, max_retries: int, logger: logging.Logger
 ) -> bool:
     """Get all Arch Official API packages metadata
 
     Args
     ----
         sbp (Client): Supabase client class.
-        current_timestamp (datetime): Time when metadata was fetched.
+        current_timestamp (datetime.datetime): Time when metadata was fetched.
         max_retries (int): Maximum retries for asyncio operations.
         logger (logging.Logger): Standard Python Logger.
 
@@ -85,14 +85,14 @@ def fetch_arch_official_repositories(
 
 
 def fetch_aur(
-    sbp: Client, current_timestamp: datetime, max_retries: int, logger: logging.Logger
+    sbp: Client, current_timestamp: datetime.datetime, max_retries: int, logger: logging.Logger
 ) -> bool:
     """Get all AUR API packages metadata
 
     Args
     ----
         sbp (Client): Supabase client class.
-        current_timestamp (datetime): Time when metadata was fetched.
+        current_timestamp (datetime.datetime): Time when metadata was fetched.
         max_retries (int): Maximum retries for asyncio operations.
         logger (logging.Logger): Standard Python Logger.
 
@@ -141,7 +141,7 @@ def fetch_aur(
 
 def main() -> None:
     logger = logging.getLogger()
-    current_timestamp = datetime.utcnow()
+    current_timestamp = datetime.datetime.now(datetime.UTC)
 
     url: str | None = os.environ.get("NEXT_PUBLIC_SUPABASE_URL")
     key: str | None = os.environ.get("SUPABASE_SERVICE_KEY")
