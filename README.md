@@ -57,7 +57,7 @@ Create a free [Supabase](https://supabase.com) account and project, and run the 
 ### Declare environment variables
 
 ```bash
-cp .env-dev .env.local
+cp --update=none .env-dev .env.local
 ```
 
 In `.env.local`, fill in the following variables
